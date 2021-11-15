@@ -44,7 +44,7 @@ public class Main {
             long lanCount = getCount(mid);
             if (lanCount >= N) {
 
-                answer = Math.max(answer, mid);
+                answer = mid;
                 start = mid + 1;
             }
             else {
