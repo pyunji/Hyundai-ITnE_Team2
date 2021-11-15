@@ -1,0 +1,5 @@
+-- 코드를 입력하세요
+--DISTINCT 위치 제대로 확인하기
+SELECT count(DISTINCT NAME) as count
+FROM ANIMAL_INS
+WHERE NAME IS NOT NULL;
