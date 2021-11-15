@@ -1,54 +1,42 @@
 import java.util.*;
+
 class Solution {
-    boolean[] chk;
-    int[] distance;
-    int LEN;
-    int maxCount = 0;
-    // public void dfs(int start, int end, int[][] edge, int count, String path) {
-    public void dfs(int start, int end, int[][] edge, int count) {
-        if(distance[end] != 0) {
-            if(count >= distance[end]) return;
-        }
-        if(start == end) {
-            if(distance[end] == 0) {
-                distance[end] = count;
-            } else {
-                distance[end] = Math.min(distance[end], count);
-            }
-            // System.out.println(path);
-        }
-        for(int i = 0; i < LEN; i++) {
-            if(!chk[i] && (edge[i][0] == start||edge[i][1] == start)) {
-                chk[i] = true;
-                if(edge[i][0] == start) {
-                    // dfs(edge[i][1], end, edge, count + 1, path + " " + String.valueOf(edge[i][1]));                   
-                    dfs(edge[i][1], end, edge, count + 1);                   
-                    
-                } else {
-                    // dfs(edge[i][0], end, edge, count + 1, path + " " + String.valueOf(edge[i][0]));                   
-                    dfs(edge[i][0], end, edge, count + 1);                   
-                    
-                }
-                chk[i] = false;
-            }
-        }
-    }
+    Queue<Integer> q = new LinkedList<>();
+    int[] chk;
+    List<Integer>[] arr;
     public int solution(int n, int[][] edge) {
-        int answer = 0;
-        LEN = edge.length;
-        chk = new boolean[LEN];
-        distance = new int[n+1];
-        for(int i = 2; i <= n; i++) {
-            // dfs(1, i, edge, 0, "1");
-            dfs(1, i, edge, 0);
+        arr = new ArrayList[n+1];
+        chk = new int[n+1];
+        for(int i = 0; i < n+1; i++) {
+            arr[i] = new ArrayList<>();
+        }
+
+        for(int i = 0; i < edge.length; i++) {
+            int a = edge[i][0];
+            int b = edge[i][1];
+            arr[a].add(b);
+            arr[b].add(a);
         }
         
-        // System.out.println(Arrays.toString(distance));
-        for(int i = 0; i < distance.length; i++) {
-            maxCount = Math.max(distance[i], maxCount);
+        chk[1] = 1;
+        q.add(1);
+        
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            for (int i = 0; i < arr[node].size(); i++) {
+                int neighbor = arr[node].get(i);
+                if(chk[neighbor] == 0) {
+                    chk[neighbor] = chk[node] + 1;
+                    q.add(neighbor);
+                }
+            }
         }
-        for(int i = 0; i < distance.length; i++) {
-            if(distance[i] == maxCount) answer++;
+
+        Arrays.sort(chk);
+        int maxValue = chk[chk.length - 1];
+        int answer = 0;
+        for(int i = 0; i < chk.length; i++) {
+            if(chk[i] == maxValue) answer++;
         }
         return answer;
     }
